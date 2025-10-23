@@ -38,6 +38,7 @@ use obstacles::get_lines_for_agent_to_obstacle;
 
 pub use obstacles::Obstacle;
 
+use rand::Rng;
 pub use simulator::{AgentParameters, Simulator, SimulatorMargin};
 pub use visibility_set::VisibilitySet;
 
@@ -85,6 +86,7 @@ impl Agent {
   /// velocity in cases of existing collisions, and must be positive.
   pub fn compute_avoiding_velocity(
     &self,
+    rng: &mut impl Rng,
     neighbours: &[Cow<'_, Agent>],
     obstacles: &[Cow<'_, Obstacle>],
     preferred_velocity: Vec2,
@@ -93,6 +95,7 @@ impl Agent {
     avoidance_options: &AvoidanceOptions,
   ) -> Vec2 {
     let result = self.compute_avoiding_velocity_internal(
+      rng,
       neighbours,
       obstacles,
       preferred_velocity,
@@ -111,6 +114,7 @@ impl Agent {
   /// debug data.
   pub fn compute_avoiding_velocity_with_debug(
     &self,
+    rng: &mut impl Rng,
     neighbours: &[Cow<'_, Agent>],
     obstacles: &[Cow<'_, Obstacle>],
     preferred_velocity: Vec2,
@@ -119,6 +123,7 @@ impl Agent {
     avoidance_options: &AvoidanceOptions,
   ) -> (Vec2, debug::DebugData) {
     self.compute_avoiding_velocity_internal(
+      rng,
       neighbours,
       obstacles,
       preferred_velocity,
@@ -131,6 +136,7 @@ impl Agent {
   /// The implementation of [`Self::compute_avoiding_velocity`].
   fn compute_avoiding_velocity_internal(
     &self,
+    rng: &mut impl Rng,
     neighbours: &[Cow<'_, Agent>],
     obstacles: &[Cow<'_, Obstacle>],
     preferred_velocity: Vec2,
@@ -152,6 +158,7 @@ impl Agent {
       })
       .chain(neighbours.iter().map(|neighbour| {
         self.get_line_for_neighbour(
+          rng,
           neighbour,
           avoidance_options.time_horizon,
           time_step,
@@ -195,6 +202,7 @@ impl Agent {
       })
       .chain(neighbours.iter().map(|neighbour| {
         self.get_line_for_neighbour(
+          rng,
           neighbour,
           avoidance_options.time_horizon,
           time_step,
@@ -233,6 +241,7 @@ impl Agent {
   /// not collide with `neighbour`.
   fn get_line_for_neighbour(
     &self,
+    rng: &mut impl Rng,
     neighbour: &Agent,
     time_horizon: f32,
     time_step: f32,
@@ -368,7 +377,7 @@ impl Agent {
         if recip.is_finite() && recip > 0.0 {
           velocity_from_circle_center * recip
         } else {
-          let angle: f32 = rand::random();
+          let angle: f32 = rng.gen();
           Vec2::new(angle.cos(), angle.sin())
         }
       };

@@ -2,6 +2,10 @@
 
 A Rust crate to compute local collision avoidance (specifically ORCA) for agents.
 
+This is a fork of [dodgy](https://github.com/andriyDev/dodgy) to eliminate the
+dependency on getrandom and make it compatible with no_std environments and
+SpacetimeDB.
+
 ## Why local collision avoidance?
 
 Characters in video games generally need to find paths to navigate around the
@@ -59,6 +63,8 @@ let obstacles: Vec<Cow<'static, Obstacle>> = vec![
 let time_horizon = 3.0;
 let obstacle_time_horizon = 1.0;
 
+let rng = &mut rand::thread_rng();
+
 fn get_delta_seconds() -> f32 {
   // Use something that actually gets the time between frames.
   return 0.01;
@@ -89,6 +95,7 @@ for i in 0..100 {
       .normalize_or_zero() * agent_max_speed;
 
     let avoidance_velocity = agents[i].compute_avoiding_velocity(
+      rng,
       &neighbours,
       &nearby_obstacles,
       preferred_velocity,
@@ -155,9 +162,10 @@ fn get_delta_seconds() -> f32 {
   return 0.01;
 }
 
+let rng = &mut rand::thread_rng();
 for i in 0..100 {
   let delta_seconds = get_delta_seconds();
-  simulator.step(delta_seconds);
+  simulator.step(rng, delta_seconds);
 
   // Update rendering using new agent positions (using simulator.get_agent).
 }
@@ -171,8 +179,8 @@ preferred.
 
 License under either of
 
-* Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
-* MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
 
 at your option.
 

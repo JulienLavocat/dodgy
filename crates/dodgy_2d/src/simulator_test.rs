@@ -79,8 +79,9 @@ fn two_agent_one_obstacle_simulation() {
   simulator.get_agent_mut(1).position = Vec2::new(-5.0, 0.0);
   simulator.get_agent_parameters_mut(1).time_horizon = 3.0;
 
+  let mut rng = rand::thread_rng();
   for _ in 0..200 {
-    simulator.step(0.1);
+    simulator.step(&mut rng, 0.1);
   }
 
   assert_vec_near!(

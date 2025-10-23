@@ -1,6 +1,7 @@
 use std::{borrow::Cow, collections::HashMap};
 
 use glam::Vec2;
+use rand::Rng;
 
 use crate::{Agent, AvoidanceOptions, Obstacle};
 
@@ -78,7 +79,7 @@ impl Simulator {
     &mut self.agent_parameters[agent_index]
   }
 
-  pub fn step(&mut self, time_step: f32) {
+  pub fn step(&mut self, rng: &mut impl Rng, time_step: f32) {
     let mut agent_pair_to_distance_squared = HashMap::new();
     // TODO: Make this fast.
     for i in 0..self.agents.len() {
@@ -114,6 +115,7 @@ impl Simulator {
       let near_obstacles = Vec::new();
 
       new_velocities.push(agent.compute_avoiding_velocity(
+        rng,
         &neighbours,
         &near_obstacles,
         parameters.goal_point - agent.position,

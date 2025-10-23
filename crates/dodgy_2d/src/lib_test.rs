@@ -45,7 +45,10 @@ mod get_line_for_neighbour_tests {
     };
 
     let actual_line = agent.get_line_for_neighbour(
-      &neighbour, /* time_horizon= */ 1.0, /* time_step= */ 1.0,
+      &mut rand::thread_rng(),
+      &neighbour,
+      /* time_horizon= */ 1.0,
+      /* time_step= */ 1.0,
     );
     // The agent's velocity projects directly onto the cut-off circle.
     assert_line_eq!(
@@ -74,7 +77,10 @@ mod get_line_for_neighbour_tests {
     };
 
     let inside_shadow_line = agent.get_line_for_neighbour(
-      &neighbour, /* time_horizon= */ 1.0, /* time_step= */ 1.0,
+      &mut rand::thread_rng(),
+      &neighbour,
+      /* time_horizon= */ 1.0,
+      /* time_step= */ 1.0,
     );
     assert_line_eq!(
       inside_shadow_line,
@@ -84,7 +90,10 @@ mod get_line_for_neighbour_tests {
     agent.velocity = Vec2::new(10.0, -1.0);
 
     let outside_shadow_line = agent.get_line_for_neighbour(
-      &neighbour, /* time_horizon= */ 1.0, /* time_step= */ 1.0,
+      &mut rand::thread_rng(),
+      &neighbour,
+      /* time_horizon= */ 1.0,
+      /* time_step= */ 1.0,
     );
     assert_line_eq!(
       outside_shadow_line,
@@ -109,7 +118,10 @@ mod get_line_for_neighbour_tests {
     };
 
     let collision_line = agent.get_line_for_neighbour(
-      &neighbour, /* time_horizon= */ 1.0, /* time_step= */ 0.5,
+      &mut rand::thread_rng(),
+      &neighbour,
+      /* time_horizon= */ 1.0,
+      /* time_step= */ 0.5,
     );
     assert_line_eq!(
       collision_line,
@@ -137,7 +149,10 @@ mod get_line_for_neighbour_tests {
     };
 
     let collision_line = agent.get_line_for_neighbour(
-      &neighbour, /* time_horizon= */ 2.0, /* time_step= */ 0.5,
+      &mut rand::thread_rng(),
+      &neighbour,
+      /* time_horizon= */ 2.0,
+      /* time_step= */ 0.5,
     );
     assert_line_eq!(
       collision_line,
@@ -165,7 +180,10 @@ mod get_line_for_neighbour_tests {
     };
 
     let actual_line = agent.get_line_for_neighbour(
-      &neighbour, /* time_horizon= */ 2.0, /* time_step= */ 0.5,
+      &mut rand::thread_rng(),
+      &neighbour,
+      /* time_horizon= */ 2.0,
+      /* time_step= */ 0.5,
     );
     assert_line_eq!(
       actual_line,
@@ -190,7 +208,10 @@ mod get_line_for_neighbour_tests {
     };
 
     let actual_line = agent.get_line_for_neighbour(
-      &neighbour, /* time_horizon= */ 2.0, /* time_step= */ 0.5,
+      &mut rand::thread_rng(),
+      &neighbour,
+      /* time_horizon= */ 2.0,
+      /* time_step= */ 0.5,
     );
     assert_line_eq!(
       actual_line,
@@ -233,6 +254,7 @@ mod compute_avoiding_velocity_tests {
 
     // Just check that this does not panic.
     agent.compute_avoiding_velocity(
+      &mut rand::thread_rng(),
       &[],
       &obstacles,
       preferred_velocity,
@@ -256,6 +278,7 @@ mod compute_avoiding_velocity_tests {
     };
 
     let avoiding_velocity = agent.compute_avoiding_velocity(
+      &mut rand::thread_rng(),
       &[Cow::Owned(agent.clone())],
       &[],
       /* preferred_velocity= */ Vec2::ZERO,
@@ -302,6 +325,7 @@ mod compute_avoiding_velocity_tests {
     };
 
     let avoiding_velocity = agent.compute_avoiding_velocity(
+      &mut rand::thread_rng(),
       &[],
       &obstacles,
       Vec2::ONE,
