@@ -21,11 +21,12 @@
 
 use crate::determinant;
 use glam::Vec2;
+use serde::{Deserialize, Serialize};
 
 /// A half-plane to act as a constraint on the linear program. This is
 /// represented as a point and a direction, where the valid half-plane resides
 /// on the counter-clockwise side of `direction` and `point`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Line {
   pub point: Vec2,
   /// Must always have length = 1

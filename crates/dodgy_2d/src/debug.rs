@@ -1,8 +1,9 @@
 // Re-export Line so we can use it to provide debug data.
 pub use crate::linear_programming::Line;
+use serde::{Deserialize, Serialize};
 
 /// Internal data that is used to generate the final suggested velocity.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum DebugData {
   /// The original problem (where the agent uses its current velocity) was
   /// solved.
